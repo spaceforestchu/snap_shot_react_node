@@ -49,10 +49,10 @@ export default (state = initialState, action) => {
 
       let geoList = (updated['geoList'] == null ) ? [] : Object.assign( [], updated['geoList']);
       let geoListMap = action.geos;
-      console.log(JSON.stringify(geoListMap));
+      //console.log(JSON.stringify(geoListMap));
       let geoObject = {}
       geoListMap.map((element, index) => {
-        console.log(JSON.stringify(geoList));
+        //console.log(JSON.stringify(geoList));
         geoObject['lat'] = element.geo[0];
         geoObject['lng'] = element.geo[1];
         geoList.push(geoObject);
@@ -60,7 +60,7 @@ export default (state = initialState, action) => {
       });
       //console.log(JSON.stringify(geoList));
       updated['geoList'] = geoList
-      console.log(JSON.stringify(updated));
+      //console.log(JSON.stringify(updated));
     return updated
 
     default:

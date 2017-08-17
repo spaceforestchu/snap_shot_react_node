@@ -25,7 +25,7 @@ class Map extends Component {
     var markerMap = this.props.geo;
 
     if (markerMap != null) {
-      console.log(JSON.stringify(markerMap));
+      //console.log(JSON.stringify(markerMap));
       markers = markerMap.map((marker, i) => {
         marker['position'] = {
           lat: marker.lat,

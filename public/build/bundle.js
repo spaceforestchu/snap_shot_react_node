@@ -24509,6 +24509,7 @@ var Posts = function (_Component) {
 
 			console.log('submitPost: ' + JSON.stringify(post));
 			this.props.createPost(post);
+			this.props.fetchGeoLocation(null);
 		}
 	}, {
 		key: 'render',
@@ -24596,6 +24597,9 @@ var dispatchToProps = function dispatchToProps(dispatch) {
 		},
 		fetchPosts: function fetchPosts(params) {
 			return dispatch(_actions2.default.fetchPosts(params));
+		},
+		fetchGeoLocation: function fetchGeoLocation(params) {
+			return dispatch(_actions2.default.fetchGeoLocation(params));
 		}
 	};
 };
@@ -31284,7 +31288,7 @@ var Map = function (_Component) {
       var markerMap = this.props.geo;
 
       if (markerMap != null) {
-        console.log(JSON.stringify(markerMap));
+        //console.log(JSON.stringify(markerMap));
         markers = markerMap.map(function (marker, i) {
           marker['position'] = {
             lat: marker.lat,
@@ -35554,10 +35558,10 @@ exports.default = function () {
 
       var geoList = updated['geoList'] == null ? [] : Object.assign([], updated['geoList']);
       var geoListMap = action.geos;
-      console.log(JSON.stringify(geoListMap));
+      //console.log(JSON.stringify(geoListMap));
       var geoObject = {};
       geoListMap.map(function (element, index) {
-        console.log(JSON.stringify(geoList));
+        //console.log(JSON.stringify(geoList));
         geoObject['lat'] = element.geo[0];
         geoObject['lng'] = element.geo[1];
         geoList.push(geoObject);
@@ -35565,7 +35569,7 @@ exports.default = function () {
       });
       //console.log(JSON.stringify(geoList));
       updated['geoList'] = geoList;
-      console.log(JSON.stringify(updated));
+      //console.log(JSON.stringify(updated));
       return updated;
 
     default:

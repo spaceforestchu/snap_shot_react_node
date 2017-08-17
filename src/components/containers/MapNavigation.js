@@ -19,8 +19,6 @@ class MapNavigation extends Component {
     this.props.fetchGeoLocation(null);
   }
 
-
-
   render() {
     return (
       <div>

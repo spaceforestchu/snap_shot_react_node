@@ -37,8 +37,9 @@ class Posts extends Component {
 			currentLocation.lng
 		]
 
-		console.log('submitPost: '+JSON.stringify(post))
-		this.props.createPost(post)
+		console.log('submitPost: '+JSON.stringify(post));
+		this.props.createPost(post);
+		this.props.fetchGeoLocation(null);
 	}
 
 	render(){
@@ -86,7 +87,8 @@ const stateToProps = (state) => {
 const dispatchToProps = (dispatch) => {
 	return {
 		createPost: (params) => dispatch(actions.createPost(params)),
-		fetchPosts: (params) => dispatch(actions.fetchPosts(params))
+		fetchPosts: (params) => dispatch(actions.fetchPosts(params)),
+		fetchGeoLocation: (params) => dispatch(actions.fetchGeoLocation(params))
 	}
 }
 

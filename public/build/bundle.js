@@ -7219,6 +7219,20 @@ var _utils = __webpack_require__(59);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
+
+  fetchGeoLocation: function fetchGeoLocation(params) {
+    return function (dispatch) {
+      _utils.APIManager.get('/api/post', params).then(function (response) {
+        //console.log('response: ' + JSON.stringify(response))
+        dispatch({
+          type: _constants2.default.FETCH_GEO,
+          geos: response.results
+        });
+      }).catch(function (err) {
+        console.log('ERROR: ' + err);
+      });
+    };
+  },
   postsReceived: function postsReceived(posts) {
     return {
       type: _constants2.default.POSTS_RECEIVED,
@@ -7229,7 +7243,7 @@ exports.default = {
   fetchPosts: function fetchPosts(params) {
     return function (dispatch) {
       _utils.APIManager.get('/api/post', params).then(function (response) {
-        console.log('response: ' + JSON.stringify(response));
+        //console.log('response: ' + JSON.stringify(response));/
         dispatch({
           type: _constants2.default.POSTS_RECEIVED,
           posts: response.results
@@ -7316,7 +7330,9 @@ exports.default = {
 
   CURRENT_USER_RECEIVED: 'CURRENT_USER_RECEIVED',
 
-  POST_CREATED: 'POST_CREATED'
+  POST_CREATED: 'POST_CREATED',
+
+  FETCH_GEO: 'FETCH_GEO'
 };
 
 /***/ }),
@@ -24468,7 +24484,7 @@ var Posts = function (_Component) {
 	}, {
 		key: 'componentDidUpdate',
 		value: function componentDidUpdate() {
-			console.log('componentDidUpdate: ');
+			//console.log('componentDidUpdate: ')
 			if (this.props.posts.list == null) {
 				var currentLocation = this.props.posts.currentLocation;
 				this.props.fetchPosts(currentLocation);
@@ -31218,6 +31234,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(3);
@@ -31262,21 +31280,40 @@ var Map = function (_Component) {
 
       var mapContainer = _react2.default.createElement('div', { style: { minHeight: 1000 } });
 
+      var markers = null;
+      var markerMap = this.props.geo;
+
+      if (markerMap != null) {
+        console.log(JSON.stringify(markerMap));
+        markers = markerMap.map(function (marker, i) {
+          marker['position'] = {
+            lat: marker.lat,
+            lng: marker.lng
+          };
+          return _react2.default.createElement(_reactGoogleMaps.Marker, _extends({
+            key: i
+          }, marker));
+        });
+      }
+
       return _react2.default.createElement(_reactGoogleMaps.GoogleMapLoader, {
         containerElement: mapContainer,
-        googleMapElement: _react2.default.createElement(_reactGoogleMaps.GoogleMap, {
+        googleMapElement: _react2.default.createElement(
+          _reactGoogleMaps.GoogleMap,
+          {
 
-          ref: function ref(map) {
-            if (_this2.state.map != null) return;
+            ref: function ref(map) {
+              if (_this2.state.map != null) return;
 
-            _this2.setState({ map: map });
+              _this2.setState({ map: map });
+            },
+            defaultZoom: this.props.zoom,
+            defaultCenter: this.props.center,
+            options: { streetViewControl: true, mapTypeControl: true },
+            onDragend: this.mapDragged.bind(this)
           },
-
-          defaultZoom: this.props.zoom,
-          defaultCenter: this.props.center,
-          options: { streetViewControl: true, mapTypeControl: true },
-          onDragend: this.mapDragged.bind(this)
-        })
+          markers
+        )
       });
     }
   }]);
@@ -35212,14 +35249,24 @@ var MapNavigation = function (_Component) {
       //5console.log('Set New Location: ' + JSON.stringify(location));
       this.props.updateCurrentLocation(location);
     }
+
+    // componentWillMount(){
+    //   console.log('componentWillMount');
+    //   this.props.fetchGeoLocation(null);
+    // }
+
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.props.fetchGeoLocation(null);
+    }
   }, {
     key: 'render',
     value: function render() {
-
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(_view.Map, { center: this.props.posts.currentLocation, zoom: 14, mapMoved: this.setNewLocation.bind(this) })
+        _react2.default.createElement(_view.Map, { center: this.props.posts.currentLocation, geo: this.props.posts.geoList, zoom: 14, mapMoved: this.setNewLocation.bind(this) })
       );
     }
   }]);
@@ -35237,6 +35284,9 @@ var dispatchToProps = function dispatchToProps(dispatch) {
   return {
     updateCurrentLocation: function updateCurrentLocation(location) {
       return dispatch(_actions2.default.updateCurrentLocation(location));
+    },
+    fetchGeoLocation: function fetchGeoLocation(params) {
+      return dispatch(_actions2.default.fetchGeoLocation(params));
     }
   };
 };
@@ -35457,7 +35507,8 @@ var initialState = {
     lat: 40.7504753,
     lng: -73.9932668
   },
-  list: null
+  list: null,
+  geoList: []
 };
 
 exports.default = function () {
@@ -35476,7 +35527,7 @@ exports.default = function () {
 
     case _constants2.default.CURRENT_LOCATION_CHANGED:
 
-      console.log('CURRENT_LOCATION_CHANGED: ' + JSON.stringify(action.location));
+      //console.log('CURRENT_LOCATION_CHANGED: ' + JSON.stringify(action.location));
       updated['currentLocation'] = action.location;
       updated['list'] = null;
 
@@ -35492,12 +35543,31 @@ exports.default = function () {
       //   updatedList = Object.assign([], updated['list']);
 
       var updatedList = updated['list'] == null ? [] : Object.assign([], updated['list']);
-
+      //console.log(JSON.stringify(updatedList));
       updatedList.unshift(action.post);
 
       updated['list'] = updatedList;
 
       return updated;
+
+    case _constants2.default.FETCH_GEO:
+
+      var geoList = updated['geoList'] == null ? [] : Object.assign([], updated['geoList']);
+      var geoListMap = action.geos;
+      console.log(JSON.stringify(geoListMap));
+      var geoObject = {};
+      geoListMap.map(function (element, index) {
+        console.log(JSON.stringify(geoList));
+        geoObject['lat'] = element.geo[0];
+        geoObject['lng'] = element.geo[1];
+        geoList.push(geoObject);
+        geoObject = {};
+      });
+      //console.log(JSON.stringify(geoList));
+      updated['geoList'] = geoList;
+      console.log(JSON.stringify(updated));
+      return updated;
+
     default:
       return updated;
   }
@@ -35534,7 +35604,7 @@ exports.default = function () {
 
     case _constants2.default.CURRENT_USER_RECEIVED:
       updated['user'] = action.user;
-      console.log(JSON.stringify(updated));
+      //console.log(JSON.stringify(updated));
       return updated;
 
     default:

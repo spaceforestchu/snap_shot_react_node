@@ -10,13 +10,21 @@ class MapNavigation extends Component {
     this.props.updateCurrentLocation(location);
   }
 
+  // componentWillMount(){
+  //   console.log('componentWillMount');
+  //   this.props.fetchGeoLocation(null);
+  // }
+
+  componentDidMount(){
+    this.props.fetchGeoLocation(null);
+  }
+
+
+
   render() {
-
-
-
     return (
       <div>
-        <Map center={this.props.posts.currentLocation} zoom={14} mapMoved={this.setNewLocation.bind(this)}/>
+        <Map center={this.props.posts.currentLocation} geo={this.props.posts.geoList} zoom={14} mapMoved={this.setNewLocation.bind(this)}/>
       </div>
     )
   }
@@ -30,7 +38,8 @@ const stateToProps = (state) => {
 
 const dispatchToProps = (dispatch) => {
   return {
-    updateCurrentLocation: (location) => dispatch(actions.updateCurrentLocation(location))
+    updateCurrentLocation: (location) => dispatch(actions.updateCurrentLocation(location)),
+    fetchGeoLocation: (params) => dispatch(actions.fetchGeoLocation(params))
   }
 }
 

@@ -2,6 +2,22 @@ import constants from '../constants';
 import { APIManager } from '../utils';
 
 export default {
+
+  fetchGeoLocation: (params) => {
+    return (dispatch) => {
+      APIManager.get('/api/post', params)
+        .then( (response) => {
+          //console.log('response: ' + JSON.stringify(response))
+          dispatch({
+            type: constants.FETCH_GEO,
+            geos: response.results
+          })
+        })
+        .catch( (err) => {
+          console.log('ERROR: ' + err);
+        })
+    }
+  },
   postsReceived: (posts) => {
     return {
       type: constants.POSTS_RECEIVED,
@@ -13,7 +29,7 @@ export default {
     return (dispatch) => {
       APIManager.get('/api/post', params)
         .then( (response) => {
-          console.log('response: ' + JSON.stringify(response));
+          //console.log('response: ' + JSON.stringify(response));/
           dispatch({
             type: constants.POSTS_RECEIVED,
             posts: response.results

@@ -11,7 +11,7 @@ export default (state = initialState, action) => {
 
     case constants.CURRENT_USER_RECEIVED:
       updated['user'] = action.user;
-      console.log(JSON.stringify(updated));
+      //console.log(JSON.stringify(updated));
       return updated;
 
     default:

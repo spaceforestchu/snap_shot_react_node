@@ -12,7 +12,7 @@ class Posts extends Component {
 	}
 
 	componentDidUpdate(){
-		console.log('componentDidUpdate: ')
+		//console.log('componentDidUpdate: ')
 		if (this.props.posts.list == null){
 			const currentLocation = this.props.posts.currentLocation
 			this.props.fetchPosts(currentLocation)

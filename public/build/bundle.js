@@ -28076,6 +28076,11 @@ var CreatePost = function (_Component) {
               { className: 'button special small', onClick: this.submitPost.bind(this) },
               'Submit'
             )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: '6u 12u$(small)' },
+            _react2.default.createElement('img', { style: { width: 120, float: 'right', marginTop: 12 }, src: this.state.post.image })
           )
         ),
         _react2.default.createElement('br', null),

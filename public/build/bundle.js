@@ -24423,7 +24423,7 @@ exports.Account = _Account2.default;
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -24451,143 +24451,137 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Posts = function (_Component) {
-  _inherits(Posts, _Component);
+	_inherits(Posts, _Component);
 
-  function Posts() {
-    _classCallCheck(this, Posts);
+	function Posts() {
+		_classCallCheck(this, Posts);
 
-    return _possibleConstructorReturn(this, (Posts.__proto__ || Object.getPrototypeOf(Posts)).apply(this, arguments));
-  }
+		return _possibleConstructorReturn(this, (Posts.__proto__ || Object.getPrototypeOf(Posts)).apply(this, arguments));
+	}
 
-  _createClass(Posts, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
+	_createClass(Posts, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var currentLocation = this.props.posts.currentLocation;
+			this.props.fetchPosts(currentLocation);
+		}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			console.log('componentDidUpdate: ');
+			if (this.props.posts.list == null) {
+				var currentLocation = this.props.posts.currentLocation;
+				this.props.fetchPosts(currentLocation);
+			}
+		}
+	}, {
+		key: 'submitPost',
+		value: function submitPost(post) {
+			var user = this.props.account.user;
+			if (user == null) {
+				alert('Please sign up or login to submit.');
+				return;
+			}
 
-      var currentLocation = this.props.posts.currentLocation;
-      this.props.fetchPosts(currentLocation);
-      return;
-    }
-  }, {
-    key: 'componentDidUpdate',
-    value: function componentDidUpdate() {
-      console.log('componentDidUpdate: ');
+			post['profile'] = {
+				id: user.id,
+				username: user.username
+			};
 
-      if (this.props.posts.list == null) {
-        var currentLocation = this.props.posts.currentLocation;
-        this.props.fetchPosts(currentLocation);
-      }
-    }
-  }, {
-    key: 'submitPost',
-    value: function submitPost(post) {
-      //console.log('submitPost:' + JSON.stringify(post));
-      var user = this.props.account.user;
-      if (user == null) {
-        alert('Please sign up or login to submit');
-        return;
-      }
+			var currentLocation = this.props.posts.currentLocation;
+			post['geo'] = [currentLocation.lat, currentLocation.lng];
 
-      post['profile'] = {
-        id: user.id,
-        username: user.username
-      };
+			console.log('submitPost: ' + JSON.stringify(post));
+			this.props.createPost(post);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var list = this.props.posts.list; // can be null
 
-      var currentLocation = this.props.posts.currentLocation;
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(_view.CreatePost, { onCreate: this.submitPost.bind(this) }),
+				_react2.default.createElement(
+					'div',
+					{ className: 'table-wrapper' },
+					_react2.default.createElement(
+						'table',
+						{ className: 'alt' },
+						_react2.default.createElement(
+							'thead',
+							null,
+							_react2.default.createElement(
+								'tr',
+								null,
+								_react2.default.createElement(
+									'th',
+									null,
+									'Image'
+								),
+								_react2.default.createElement(
+									'th',
+									null,
+									'Caption'
+								),
+								_react2.default.createElement(
+									'th',
+									null,
+									'From'
+								)
+							)
+						),
+						_react2.default.createElement(
+							'tbody',
+							null,
+							list == null ? null : list.map(function (post, i) {
+								return _react2.default.createElement(
+									'tr',
+									{ key: post.id },
+									_react2.default.createElement(
+										'td',
+										null,
+										_react2.default.createElement('img', { style: { width: 64 }, src: post.image })
+									),
+									_react2.default.createElement(
+										'td',
+										null,
+										post.caption
+									),
+									_react2.default.createElement(
+										'td',
+										null,
+										post.profile.username
+									)
+								);
+							})
+						)
+					)
+				)
+			);
+		}
+	}]);
 
-      post['geo'] = [currentLocation.lat, currentLocation.lng];
-
-      console.log('submitPost:' + JSON.stringify(post));
-      this.props.createPost(post);
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-
-      var list = this.props.posts.list;
-
-      return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(_view.CreatePost, { onCreate: this.submitPost.bind(this) }),
-        _react2.default.createElement(
-          'div',
-          { className: 'table-wrapper' },
-          _react2.default.createElement(
-            'table',
-            { className: 'alt' },
-            _react2.default.createElement(
-              'thead',
-              null,
-              _react2.default.createElement(
-                'tr',
-                null,
-                _react2.default.createElement(
-                  'th',
-                  null,
-                  'Image'
-                ),
-                _react2.default.createElement(
-                  'th',
-                  null,
-                  'Caption'
-                ),
-                _react2.default.createElement(
-                  'th',
-                  null,
-                  'From'
-                )
-              )
-            ),
-            _react2.default.createElement(
-              'tbody',
-              null,
-              list == null ? null : list.map(function (post, i) {
-                return _react2.default.createElement(
-                  'tr',
-                  { key: post.id },
-                  _react2.default.createElement(
-                    'td',
-                    null,
-                    _react2.default.createElement('img', { style: { width: 72 }, src: post.image })
-                  ),
-                  _react2.default.createElement(
-                    'td',
-                    null,
-                    post.caption
-                  ),
-                  _react2.default.createElement(
-                    'td',
-                    null,
-                    post.profile.username
-                  )
-                );
-              })
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return Posts;
+	return Posts;
 }(_react.Component);
 
 var stateToProps = function stateToProps(state) {
-  return {
-    posts: state.post,
-    account: state.account
-  };
+	return {
+		posts: state.post,
+		account: state.account
+	};
 };
 
 var dispatchToProps = function dispatchToProps(dispatch) {
-  return {
-    fetchPosts: function fetchPosts(params) {
-      return dispatch(_actions2.default.fetchPosts(params));
-    },
-    createPost: function createPost(params) {
-      return dispatch(_actions2.default.createPost(params));
-    }
-  };
+	return {
+		createPost: function createPost(params) {
+			return dispatch(_actions2.default.createPost(params));
+		},
+		fetchPosts: function fetchPosts(params) {
+			return dispatch(_actions2.default.fetchPosts(params));
+		}
+	};
 };
 
 exports.default = (0, _reactRedux.connect)(stateToProps, dispatchToProps)(Posts);
@@ -35492,7 +35486,7 @@ exports.default = function () {
       // else
       //   updatedList = Object.assign([], updated['list']);
 
-      var updatedList = updatedList['list'] == null ? [] : Object.assign([], updated['list']);
+      var updatedList = updated['list'] == null ? [] : Object.assign([], updated['list']);
 
       updatedList.unshift(action.post);
 

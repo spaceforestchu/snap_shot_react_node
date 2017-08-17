@@ -1,99 +1,93 @@
-import React, { Component } from 'react';
-import { APIManager } from '../../utils';
-import { connect } from 'react-redux';
-import actions from '../../actions';
-import { CreatePost } from '../view';
+import React, { Component } from 'react'
+import { APIManager } from '../../utils'
+import { connect } from 'react-redux'
+import actions from '../../actions'
+import { CreatePost } from '../view'
 
 class Posts extends Component {
 
-  componentDidMount() {
+	componentDidMount(){
+		const currentLocation = this.props.posts.currentLocation
+		this.props.fetchPosts(currentLocation)
+	}
 
-    const currentLocation = this.props.posts.currentLocation;
-    this.props.fetchPosts(currentLocation);
-    return;
-  }
+	componentDidUpdate(){
+		console.log('componentDidUpdate: ')
+		if (this.props.posts.list == null){
+			const currentLocation = this.props.posts.currentLocation
+			this.props.fetchPosts(currentLocation)
+		}
+	}
 
-  componentDidUpdate() {
-    console.log('componentDidUpdate: ');
+	submitPost(post){
+		const user = this.props.account.user
+		if (user == null){
+			alert('Please sign up or login to submit.')
+			return
+		}
 
-    if (this.props.posts.list == null) {
-       const currentLocation = this.props.posts.currentLocation;
-       this.props.fetchPosts(currentLocation);
+		post['profile'] = {
+			id: user.id,
+			username: user.username
+		}
 
-    }
+		const currentLocation = this.props.posts.currentLocation
+		post['geo'] = [
+			currentLocation.lat,
+			currentLocation.lng
+		]
 
-  }
+		console.log('submitPost: '+JSON.stringify(post))
+		this.props.createPost(post)
+	}
 
-  submitPost(post){
-    //console.log('submitPost:' + JSON.stringify(post));
-    const user = this.props.account.user
-    if (user == null) {
-      alert('Please sign up or login to submit');
-      return;
-    }
+	render(){
+		const list = this.props.posts.list // can be null
 
-    post['profile'] = {
-      id: user.id,
-      username: user.username
-    }
+		return (
+			<div>
+				<CreatePost onCreate={this.submitPost.bind(this)} />
 
+				<div className="table-wrapper">
+					<table className="alt">
+						<thead>
+							<tr><th>Image</th><th>Caption</th><th>From</th></tr>
+						</thead>
+						<tbody>
+							{ (list == null) ? null :
+								list.map((post, i) => {
+									return (
+										<tr key={post.id}>
+											<td><img style={{width:64}} src={post.image} /></td>
+											<td>{post.caption}</td>
+											<td>{post.profile.username}</td>
+										</tr>
 
-    const currentLocation = this.props.posts.currentLocation;
+									)
+								})
+							 }
 
-    post['geo'] = [
-      currentLocation.lat,
-      currentLocation.lng
-    ]
+						</tbody>
+					</table>
+				</div>
 
-    console.log('submitPost:' + JSON.stringify(post));
-    this.props.createPost(post);
-
-  }
-
-  render() {
-
-    const list = this.props.posts.list;
-
-    return (
-      <div>
-        <CreatePost onCreate={this.submitPost.bind(this)}/>
-
-      <div className='table-wrapper'>
-        <table className='alt'>
-          <thead>
-            <tr><th>Image</th><th>Caption</th><th>From</th></tr>
-          </thead>
-        <tbody>
-          { (list == null ) ? null : list.map((post, i) => {
-            return (
-              <tr key={post.id}>
-                <td><img style={{width:72}} src={post.image} /></td>
-                <td>{post.caption}</td>
-                <td>{post.profile.username}</td>
-              </tr>
-            )
-          })
-        }
-        </tbody>
-      </table>
-      </div>
-      </div>
-    )
-  }
+			</div>
+		)
+	}
 }
 
 const stateToProps = (state) => {
-  return {
-    posts: state.post,
-    account: state.account
-  }
+	return {
+		posts: state.post,
+		account: state.account
+	}
 }
 
 const dispatchToProps = (dispatch) => {
-  return {
-    fetchPosts: (params) => dispatch(actions.fetchPosts(params)),
-    createPost: (params) => dispatch(actions.createPost(params))
-  }
+	return {
+		createPost: (params) => dispatch(actions.createPost(params)),
+		fetchPosts: (params) => dispatch(actions.fetchPosts(params))
+	}
 }
 
-export default connect(stateToProps, dispatchToProps)(Posts);
+export default connect(stateToProps, dispatchToProps)(Posts)

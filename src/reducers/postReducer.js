@@ -25,8 +25,6 @@ export default (state = initialState, action) => {
       updated['currentLocation'] = action.location;
       updated['list'] = null;
 
-
-
       return updated;
 
     case constants.POST_CREATED:
@@ -38,7 +36,7 @@ export default (state = initialState, action) => {
       // else
       //   updatedList = Object.assign([], updated['list']);
 
-      let updatedList = (updatedList['list'] == null) ? [] : Object.assign([], updated['list']);
+      let updatedList = (updated['list'] == null) ? [] : Object.assign([], updated['list']);
 
       updatedList.unshift(action.post);
 

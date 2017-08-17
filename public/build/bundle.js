@@ -35135,14 +35135,26 @@ var Register = function (_Component) {
         _react2.default.createElement('input', { onChange: this.updateRegistration.bind(this), id: 'password', type: 'password', placeholder: 'Password' }),
         _react2.default.createElement('br', null),
         _react2.default.createElement(
-          'button',
-          { className: 'button special small', onClick: this.submitRegistration.bind(this) },
-          'Join'
-        ),
-        _react2.default.createElement(
-          'button',
-          { className: 'button special small', onClick: this.submmitLoginCredentials.bind(this) },
-          'Sign In'
+          'div',
+          { className: 'row' },
+          _react2.default.createElement(
+            'div',
+            { className: '3u 12u$(small)' },
+            _react2.default.createElement(
+              'button',
+              { className: 'btn btn-primary btn-sm', onClick: this.submitRegistration.bind(this) },
+              'Join'
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: '3u 12u$(small)', style: { marginRight: 20 } },
+            _react2.default.createElement(
+              'button',
+              { className: 'btn btn-primary btn-sm', onClick: this.submmitLoginCredentials.bind(this) },
+              'Sign In'
+            )
+          )
         )
       );
     }

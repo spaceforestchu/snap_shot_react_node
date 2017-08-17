@@ -64,10 +64,14 @@ class Register extends Component {
         <h2>Sign up</h2>
         <input  onChange={this.updateRegistration.bind(this)} id='username' type='text' placeholder='Username'/><br/>
         <input  onChange={this.updateRegistration.bind(this)} id='password' type='password' placeholder='Password'/><br/>
-        <button className='button special small' onClick={this.submitRegistration.bind(this)}>Join</button>
-
-        <button className='button special small' onClick={this.submmitLoginCredentials.bind(this)}>Sign In</button>
-
+        <div className='row'>
+          <div className='3u 12u$(small)'>
+            <button className='btn btn-primary btn-sm' onClick={this.submitRegistration.bind(this)}>Join</button>
+          </div>
+          <div className='3u 12u$(small)' style={{marginRight: 20}}>
+            <button className='btn btn-primary btn-sm' onClick={this.submmitLoginCredentials.bind(this)}>Sign In</button>
+          </div>
+        </div>
       </div>
 
     )
